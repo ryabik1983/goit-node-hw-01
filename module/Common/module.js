@@ -1,5 +1,5 @@
 const log = (msg) => { 
-    console.log(`Log: ${msg} - ${abc}`)
+    console.log(`LogCommonJS: ${msg} - ${abc}`)
 }
 
 const info = (msg) => { 

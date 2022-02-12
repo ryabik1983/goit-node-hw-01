@@ -3,7 +3,7 @@ export const log = (msg) => {
 }
 
 export const info = (msg) => { 
-    console.log(`Info: ${msg}`)
+    console.log(`InfoESModule: ${msg}`)
 }
 
 // module.exports = { log, info };
