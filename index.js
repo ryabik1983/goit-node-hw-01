@@ -1,43 +1,48 @@
-const { log, info } = require('./module/Common/module')
+const { Command } = require('commander');
+const { listContacts, addContact, getContactById } = require('./contacts');
+const program = new Command();
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone');
 
-global.abc = 123
+program.parse(process.argv);
 
-log('Hello')
+const argv = program.opts();
 
-// import('./ES/module.mjs').then(result => {
-//     const { info } = result
-//     info('Hi')
-// })
-    // IIFE                                 
-    ; (async () => { 
-        const result = await import('./ES/module.mjs')
-        const { info } = result
-    info('Hi')
+// TODO: рефакторить
+async function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case 'list':
+          const contacts = await listContacts()
+          console.table(contacts)
+      break;
 
-    })()
+    case 'get':
+          const contactById = await getContactById(id)
+          if (contactById) { 
+              console.log(contactById);
+              return
+          }
+            console.log('Not Found!');
+    
+    // ... id
+      break;
 
+    case 'add':
+          const contact = await addContact(name, email, phone)
+          console.log(contact);
+      break;
 
-// const fs = require("fs/promises");
+    case 'remove':
+      // ... id
+      break;
 
-// const fileOperation = async (filePath, action = "read", data = "") => {
-//     switch (action) { 
-//         case "read":
-//             const text = await fs.readFile(filePath, "utf-8");
-//             console.log(text);
-//             break;
-//         case "add":
-//             const result = await fs.appendFile(filePath, data);
-//             console.log(result);
-//             break;
-//     }
-// };
+    default:
+      console.warn('\x1B[31m Unknown action type!');
+  }
+}
 
-// fileOperation("files/file.txt", "add", "\nНе плюйся - никто не носит золота во рту!");
-
-// fs.readFile("files/file.txt", "utf-8")
-//     .then(data => { 
-//         console.log(data);
-//         // const text = data.toString(utf - 8);
-//         // console.log(text);
-//     })    
-//     .catch(error => console.log(error.message))
+invokeAction(argv);

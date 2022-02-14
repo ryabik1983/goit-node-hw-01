@@ -18,7 +18,7 @@ class SortFiles {
             console.log(item)
         } else { 
             console.log(localBase);
-            await readFolder(localBase)
+            await this.readFolder(localBase)
         }
         
     }
