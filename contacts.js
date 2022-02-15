@@ -1,6 +1,7 @@
 const fs = require('fs/promises')
 const path = require ('path')
 const { randomUUID } = require('crypto')
+
 const readContent = async () => { 
     const content = await fs.readFile(
         path.join(__dirname, './db/contacts.json'),
@@ -17,12 +18,19 @@ async function listContacts() {
 
 async function getContactById(contactId) {
     const contacts = await readContent()
-    const [contact] = contacts.filter((c) => c.id === contactId)
+    const [contact] = contacts.filter((item) => item.id === contactId)
     return contact
 }
 
-function removeContact(contactId) {
-  // ...твой код
+async function removeContact(contactId) {
+  const contacts = await readContent();
+  const deletedContact = await getContactById(contactId);
+  const newContacts = contacts.filter((el) => el.id !== contactId);
+  await fs.writeFile(
+    path.join(__dirname, "./db/contacts.json"),
+    JSON.stringify(newContacts, null, 2)
+  );
+  return deletedContact ? deletedContact : "contact is not exist";
 }
 
 async function addContact(name, email, phone) {
